@@ -30,6 +30,19 @@ dependencies {
     testCompile 'info.cukes:cucumber-junit:1.2.2'
 
     testCompile 'junit:junit:4.11'
+
+
+    compile 'org.webbitserver:webbit:0.4.15'
+
+
+    testCompile 'info.cukes:cucumber-jvm-deps:1.0.3'
+    testCompile 'info.cukes:cucumber-picocontainer:1.2.2'
+    testCompile 'info.cukes:cucumber-junit:1.2.2'
+    testCompile 'org.picocontainer:picocontainer:2.15'
+    testCompile 'org.seleniumhq.selenium:selenium-chrome-driver:2.44.0'
+    testCompile 'org.seleniumhq.selenium:selenium-server:2.44.0'
+    testCompile 'org.slf4j:jcl-over-slf4j:1.7.10'
+    testCompile 'ch.qos.logback:logback-classic:1.1.2'
 }
 
 task wrapper(type: Wrapper) {
