@@ -7,6 +7,7 @@ import org.openqa.selenium.OutputType;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebDriverException;
 import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.support.events.EventFiringWebDriver;
 
@@ -33,8 +34,8 @@ import java.io.File;
  * </p>
  */
 public class SharedDriver extends EventFiringWebDriver {
-//    private static final WebDriver REAL_DRIVER = new FirefoxDriver();
-    private static final WebDriver REAL_DRIVER = new ChromeDriver();
+    private static final WebDriver REAL_DRIVER = new FirefoxDriver();
+//    private static final WebDriver REAL_DRIVER;// = new ChromeDriver();
     
     private static final Thread CLOSE_THREAD = new Thread() {
         @Override
@@ -44,6 +45,9 @@ public class SharedDriver extends EventFiringWebDriver {
     };
 
     static {
+//        ChromeOptions options = new ChromeOptions();
+//        options.addArguments("--test-type --ignore-certificate-errors");
+//        REAL_DRIVER = new ChromeDriver(options);
         Runtime.getRuntime().addShutdownHook(CLOSE_THREAD);
     }
 
