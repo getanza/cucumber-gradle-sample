@@ -1,12 +1,16 @@
 apply plugin: 'java'
 apply plugin: 'idea'
-
+apply plugin: 'maven'
 
 
 sourceCompatibility = 1.5
+group = 'some.stuff'
 version = '1.0'
 
 repositories {
+    maven {
+        url 'https://s3-ap-southeast-2.amazonaws.com/releases.repo.pks.com.au'
+    }
     mavenCentral()
 }
 
@@ -27,6 +31,55 @@ task cucumber() {
     }
 }
 
+task sourceJar(type: Jar) {
+    description = 'Builds a source jar artifact suitable for maven deployment'
+    classifier = 'sources'
+    from sourceSets.main.java
+}
+build.dependsOn sourceJar
+
+artifacts {
+    archives sourceJar
+}
+
+configurations {
+    deployerJars
+}
+
+uploadArchives {
+    repositories {
+        mavenDeployer {
+//            assert project.hasProperty('awsAccessKey') && project.hasProperty('awsSecretKey'): "AWS credential is required"
+            def awsCredentials = [
+                    userName: 'AKIAIZW7NUGCE44NNXSA',
+                    passphrase: '+RX5RIWfgpoPrLEGEvlzEs2hBfpvrMrj1jEA9dEh'
+            ]
+
+            configuration = configurations.deployerJars
+            repository(url: "s3://releases.repo.pks.com.au") {
+                authentication(awsCredentials)
+            }
+            snapshotRepository(url: "s3://snapshots.repo.pks.com.au") {
+                authentication(awsCredentials)
+            }
+        }
+    }
+}
+
+[install.repositories.mavenInstaller, uploadArchives.repositories.mavenDeployer]*.pom*.whenConfigured { pom ->
+    pom.project {
+        inceptionYear '2013'
+        packaging 'jar'
+        licenses {
+            license {
+                name 'The Apache Software License, Version 2.0'
+                url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+                distribution 'repo'
+            }
+        }
+    }
+}
+
 dependencies {
     testCompile 'info.cukes:cucumber-java:1.2.2'
     testCompile 'info.cukes:cucumber-junit:1.2.2'
@@ -35,8 +88,7 @@ dependencies {
 
 
     compile 'org.webbitserver:webbit:0.4.15'
-
-
+    
     testCompile 'info.cukes:cucumber-jvm-deps:1.0.3'
     testCompile 'info.cukes:cucumber-picocontainer:1.2.2'
     testCompile 'info.cukes:cucumber-junit:1.2.2'
@@ -45,6 +97,8 @@ dependencies {
     testCompile 'org.seleniumhq.selenium:selenium-server:2.44.0'
     testCompile 'org.slf4j:jcl-over-slf4j:1.7.10'
     testCompile 'ch.qos.logback:logback-classic:1.1.2'
+
+    deployerJars "org.springframework.build:aws-maven:4.7.0.RELEASE"
 }
 
 task wrapper(type: Wrapper) {
