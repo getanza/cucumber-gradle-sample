@@ -51,8 +51,6 @@ uploadArchives {
         mavenDeployer {
 //            assert project.hasProperty('awsAccessKey') && project.hasProperty('awsSecretKey'): "AWS credential is required"
             def awsCredentials = [
-                    userName: 'AKIAIZW7NUGCE44NNXSA',
-                    passphrase: '+RX5RIWfgpoPrLEGEvlzEs2hBfpvrMrj1jEA9dEh'
             ]
 
             configuration = configurations.deployerJars
